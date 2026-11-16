@@ -106,7 +106,9 @@ async function fetchCalendar(url) {
     signal: AbortSignal.timeout(15_000),
   });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
-  const data = ical.sync.parseICS(await res.text());
+  const text = await res.text();
+  if (!text.includes('BEGIN:VCALENDAR')) throw new Error('That link didn’t return a calendar file');
+  const data = ical.sync.parseICS(text);
   icsCache.set(url, { at: Date.now(), data });
   return data;
 }
@@ -338,6 +340,28 @@ app.put('/api/settings', (req, res) => {
 });
 
 // City search for the weather location (Open-Meteo geocoding).
+// Per-calendar health check for the admin page: does each link load, and how much is in it?
+app.get('/api/calendars/status', wrap(async (req, res) => {
+  const friendly = (msg) =>
+    /HTTP 40[34]/.test(msg) ? `${msg}: link not found or not public. Is “Public Calendar” still on?`
+    : /timeout|aborted/i.test(msg) ? 'Timed out reaching the calendar. Check the internet connection.'
+    : /fetch failed|ENOTFOUND|EAI_AGAIN/i.test(msg) ? 'Couldn’t reach that address. Check the link was copied in full.'
+    : msg;
+  const results = await Promise.all(db.calendars.map(async (c) => {
+    if (!c.url) return { id: c.id, ok: false, message: 'No link yet' };
+    try {
+      const data = await fetchCalendar(c.url);
+      const now = Date.now();
+      const events = Object.values(data).filter((e) => e.type === 'VEVENT');
+      const upcoming = events.filter((e) => e.rrule || (e.end || e.start) >= now).length;
+      return { id: c.id, ok: true, message: `Connected: ${events.length} events (${upcoming} upcoming or repeating)` };
+    } catch (err) {
+      return { id: c.id, ok: false, message: friendly(String(err.message || err)) };
+    }
+  }));
+  res.json({ results });
+}));
+
 app.get('/api/geocode', wrap(async (req, res) => {
   const q = str(req.query.q, 100);
   if (!q) return res.json({ results: [] });

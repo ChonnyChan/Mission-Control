@@ -140,7 +140,23 @@ function renderFamily() {
         <select data-k="personId">${personOptions(c.personId, 'Shared / family')}</select>
         <input type="color" data-k="color" value="${c.color}" title="Color for shared calendars">
       </div>
+      <div class="cal-status" data-status="${c.id}">${c.url ? 'Checking…' : ''}</div>
     </div>`).join('') || '<p class="hint">No calendars yet.</p>';
+  checkCalendars();
+}
+async function checkCalendars() {
+  if (!C.calendars.some((c) => c.url)) return;
+  for (const c of C.calendars) {
+    const el = document.querySelector(`[data-status="${c.id}"]`);
+    if (el) { el.textContent = c.url ? 'Checking…' : ''; el.className = 'cal-status'; }
+  }
+  try {
+    const { results } = await api('/api/calendars/status');
+    for (const r of results) {
+      const el = document.querySelector(`[data-status="${r.id}"]`);
+      if (el) { el.textContent = (r.ok ? '✓ ' : '✕ ') + r.message; el.className = `cal-status ${r.ok ? 'ok' : 'bad'}`; }
+    }
+  } catch (err) { console.warn(err); }
 }
 function bindList(containerId, key, after) {
   $(containerId).addEventListener('change', async (e) => {
@@ -161,7 +177,7 @@ function bindList(containerId, key, after) {
   });
 }
 bindList('people', 'people', renderChoreEditor);
-bindList('calendars', 'calendars');
+bindList('calendars', 'calendars', checkCalendars); // re-check links after any edit
 const PALETTE = ['#4f9dff', '#ff7eb6', '#ffb84f', '#5fd38d', '#b48cff', '#ff6b5f', '#4fd5e0'];
 $('add-person').addEventListener('click', async () => {
   C.people.push({ name: 'New person', color: PALETTE[C.people.length % PALETTE.length] });

@@ -65,3 +65,8 @@ label.check { display: flex; align-items: center; gap: 0.5rem; padding-bottom: 0
 .days button.on { background: var(--accent); border-color: var(--accent); color: #fff; }
 
 .results button { display: block; width: 100%; text-align: left; margin-top: 0.4rem; }
+
+.cal-status { font-size: 0.85rem; margin-top: 0.5rem; color: var(--muted); }
+.cal-status:empty { display: none; }
+.cal-status.ok { color: var(--good); }
+.cal-status.bad { color: var(--danger); }
