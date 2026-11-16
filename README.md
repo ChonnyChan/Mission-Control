@@ -33,7 +33,18 @@ Open `http://localhost:3000` for the TV view and `/admin` for the admin page. Th
 
 To use the admin page on your phone, open `http://<computer's-local-IP>:3000/admin` while on home Wi-Fi, then use "Add to Home Screen" so it works like an app.
 
-## Getting it onto the TV
+## Our setup: an always-on Windows PC and the Samsung TV's browser
+
+1. On the PC, install [Node.js LTS](https://nodejs.org/) and get this repo (`git clone`, or download the ZIP from GitHub).
+2. Open **PowerShell as Administrator** in the `Mission-Control` folder and run:
+   `powershell -ExecutionPolicy Bypass -File scripts\windows-setup.ps1`
+   This installs everything, opens port 3000 on the home network only, and sets Mission Control to start with Windows. At the end it prints the TV and phone addresses.
+3. On the Samsung TV, open the **Internet** app, go to the printed address, bookmark it, and turn on full screen. If your model has it, turn on **Settings → General → Smart Features → Autorun Last App** so the page reopens when the TV turns on.
+4. On your phone, open `/admin` at the same address and add it to the home screen.
+
+To update later, pull the new code in the folder, then run `Stop-ScheduledTask MissionControl; Start-ScheduledTask MissionControl` in an Administrator PowerShell. The TV reloads itself.
+
+## Getting it onto the TV (other options)
 
 The server has to run on something that's always on. The TV just shows a web page. The cheapest options, best first:
 
@@ -64,7 +75,7 @@ WantedBy=multi-user.target
 
 Then run `sudo systemctl enable --now mission-control`.
 
-On Windows, use Task Scheduler to run `npm start` in this folder at logon, and add the Chrome kiosk shortcut to the Startup folder.
+On Windows, run `scripts\windows-setup.ps1` (see above).
 
 ## Configuration
 
