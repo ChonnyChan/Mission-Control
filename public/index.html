@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mission Control</title>
+<link rel="stylesheet" href="/display.css">
+</head>
+<body>
+<div id="app">
+  <header class="top">
+    <div class="clock">
+      <div id="time" class="time">--:--</div>
+      <div id="date" class="date"></div>
+    </div>
+    <div id="message" class="message"></div>
+    <div id="weather" class="weather"></div>
+  </header>
+
+  <main class="grid">
+    <section class="panel schedule">
+      <h2>Today</h2>
+      <div id="allday" class="allday"></div>
+      <ol id="today" class="events"></ol>
+    </section>
+
+    <section class="panel chores">
+      <h2>Chores <span id="chore-total" class="muted"></span></h2>
+      <div id="chores" class="people"></div>
+    </section>
+
+    <section class="panel meals">
+      <h2>Meals</h2>
+      <div id="meals-today" class="meals-today"></div>
+      <h3>This week</h3>
+      <ul id="meals-week" class="meals-week"></ul>
+    </section>
+  </main>
+
+  <footer class="week">
+    <div id="week" class="week-days"></div>
+  </footer>
+</div>
+
+<div id="night" class="night" hidden>
+  <div id="night-time" class="night-time"></div>
+  <div id="night-date" class="night-date"></div>
+</div>
+
+<div id="status" class="status" hidden></div>
+
+<script src="/shared.js"></script>
+<script src="/display.js"></script>
+</body>
+</html>

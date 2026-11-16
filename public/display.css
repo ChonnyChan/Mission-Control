@@ -1,0 +1,152 @@
+/* Mission Control — TV display.
+   Everything is sized in rem, and 1rem scales with the screen (16px on a 1080p TV),
+   so the layout looks the same on any TV. Tweak the theme with the variables below. */
+
+:root {
+  --bg: #0b0f17;
+  --bg-2: #121826;
+  --panel: #151c2b;
+  --line: #243049;
+  --text: #eef2f8;
+  --muted: #8d99ae;
+  --accent: #6aa8ff;
+  --good: #5fd38d;
+  --warn: #ffb84f;
+  --radius: 1.25rem;
+  font-size: min(calc(100vw / 120), calc(100vh / 67.5));
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Inter", "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "DejaVu Sans", sans-serif;
+  overflow: hidden;
+  cursor: none; /* nobody needs a mouse pointer on the TV */
+  -webkit-font-smoothing: antialiased;
+}
+
+#app {
+  height: 100vh;
+  /* ~3% padding keeps things clear of TV overscan */
+  padding: 2rem 3rem;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  gap: 1.5rem;
+  background: radial-gradient(ellipse at top left, #16213a 0%, var(--bg) 55%);
+}
+
+.muted { color: var(--muted); font-weight: 500; }
+
+/* ---------- header ---------- */
+.top { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 3rem; }
+.time { font-size: 7.5rem; font-weight: 700; line-height: 1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.time .ampm { font-size: 2.6rem; font-weight: 600; color: var(--muted); margin-left: 0.6rem; letter-spacing: 0; }
+.date { font-size: 2.3rem; color: var(--muted); margin-top: 0.4rem; font-weight: 500; }
+
+.message {
+  justify-self: center;
+  font-size: 2.2rem;
+  font-weight: 600;
+  text-align: center;
+  padding: 1rem 2rem;
+  border-radius: 999px;
+  background: var(--bg-2);
+  border: 1px solid var(--line);
+  max-width: 100%;
+}
+.message:empty { display: none; }
+
+.weather { display: flex; align-items: center; gap: 2.5rem; }
+.wx-now { display: flex; align-items: center; gap: 1rem; }
+.wx-now svg { width: 6rem; height: 6rem; }
+.wx-temp { font-size: 5rem; font-weight: 700; line-height: 1; }
+.wx-sub { font-size: 1.5rem; color: var(--muted); margin-top: 0.3rem; }
+.wx-days { display: flex; gap: 1.2rem; }
+.wx-day { text-align: center; font-size: 1.4rem; color: var(--muted); }
+.wx-day svg { width: 3rem; height: 3rem; display: block; margin: 0.2rem auto; }
+.wx-day b { color: var(--text); }
+.wx-setup { font-size: 1.5rem; color: var(--muted); }
+
+/* ---------- panels ---------- */
+.grid { display: grid; grid-template-columns: 1.15fr 1.35fr 1fr; gap: 1.5rem; min-height: 0; }
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 1.6rem 1.8rem;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+.panel h2 { font-size: 2.1rem; font-weight: 700; margin-bottom: 1.1rem; display: flex; justify-content: space-between; align-items: baseline; }
+.panel h3 { font-size: 1.4rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); margin: 1.4rem 0 0.7rem; font-weight: 600; }
+
+.empty { color: var(--muted); font-size: 1.7rem; padding: 0.8rem 0; }
+
+/* schedule */
+.allday { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+.allday:not(:empty) { margin-bottom: 1rem; }
+.chip { font-size: 1.5rem; font-weight: 600; padding: 0.45rem 1rem; border-radius: 999px; background: color-mix(in srgb, var(--c) 22%, transparent); border: 1px solid color-mix(in srgb, var(--c) 55%, transparent); }
+
+.events { list-style: none; display: flex; flex-direction: column; gap: 0.8rem; overflow: hidden; }
+.event { display: grid; grid-template-columns: 8.5rem 0.45rem 1fr; gap: 1rem; align-items: center; transition: opacity 0.6s; }
+.event .when { font-size: 1.7rem; font-weight: 600; font-variant-numeric: tabular-nums; text-align: right; }
+.event .when small { display: block; font-size: 1.2rem; color: var(--muted); font-weight: 500; }
+.event .bar { align-self: stretch; border-radius: 1rem; background: var(--c); }
+.event .what { font-size: 1.85rem; font-weight: 600; line-height: 1.2; }
+.event .who { font-size: 1.3rem; color: var(--muted); margin-top: 0.15rem; }
+.event.past { opacity: 0.4; }
+.event.now .what::after { content: "NOW"; font-size: 1rem; font-weight: 800; letter-spacing: 0.1em; margin-left: 0.8rem; padding: 0.2rem 0.6rem; border-radius: 0.4rem; background: var(--accent); color: #04101f; vertical-align: middle; }
+
+/* chores */
+.people { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; align-content: start; overflow: hidden; }
+.person { background: var(--bg-2); border-radius: 1rem; padding: 1.1rem 1.2rem; border-top: 0.35rem solid var(--c); }
+.person-head { display: flex; align-items: center; gap: 0.8rem; margin-bottom: 0.7rem; }
+.avatar { width: 2.8rem; height: 2.8rem; border-radius: 50%; background: var(--c); color: #0b0f17; font-weight: 800; font-size: 1.5rem; display: grid; place-items: center; flex: none; }
+.person-name { font-size: 1.75rem; font-weight: 700; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.person-count { font-size: 1.4rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.progress { height: 0.45rem; border-radius: 1rem; background: var(--line); overflow: hidden; margin-bottom: 0.8rem; }
+.progress > div { height: 100%; background: var(--c); transition: width 0.8s ease; }
+.chore-list { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+.chore { display: flex; align-items: center; gap: 0.7rem; font-size: 1.55rem; transition: color 0.4s; }
+.check { width: 1.7rem; height: 1.7rem; border-radius: 50%; border: 0.18rem solid var(--muted); flex: none; display: grid; place-items: center; transition: all 0.4s; }
+.chore.done { color: var(--muted); text-decoration: line-through; text-decoration-thickness: 0.12rem; }
+.chore.done .check { background: var(--good); border-color: var(--good); }
+.chore.done .check::after { content: ""; width: 0.45rem; height: 0.8rem; border: solid #0b0f17; border-width: 0 0.2rem 0.2rem 0; transform: translateY(-0.1rem) rotate(45deg); }
+.all-done { font-size: 2rem; line-height: 1; font-weight: 700; color: var(--good); }
+
+/* meals */
+.meals-today { display: flex; flex-direction: column; gap: 0.9rem; }
+.meal { background: var(--bg-2); border-radius: 1rem; padding: 1rem 1.3rem; }
+.meal-label { font-size: 1.2rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--muted); font-weight: 600; }
+.meal-name { font-size: 2.3rem; font-weight: 700; margin-top: 0.2rem; line-height: 1.15; }
+.meal-name.unplanned { color: var(--muted); font-weight: 500; font-style: italic; font-size: 1.8rem; }
+.meals-week { list-style: none; display: flex; flex-direction: column; gap: 0.55rem; overflow: hidden; }
+.meals-week li { display: grid; grid-template-columns: 4.5rem 1fr; gap: 0.8rem; font-size: 1.5rem; }
+.meals-week .d { color: var(--muted); font-weight: 600; }
+.meals-week .tbd { color: var(--muted); font-style: italic; }
+
+/* ---------- week ahead ---------- */
+.week-days { display: grid; grid-template-columns: repeat(5, 1fr); gap: 1.1rem; }
+.wday { background: var(--panel); border: 1px solid var(--line); border-radius: 1rem; padding: 0.9rem 1.1rem; min-height: 9.5rem; overflow: hidden; }
+.wday-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; }
+.wday-name { font-size: 1.6rem; font-weight: 700; }
+.wday-wx { display: flex; align-items: center; gap: 0.3rem; font-size: 1.3rem; color: var(--muted); }
+.wday-wx svg { width: 2.2rem; height: 2.2rem; }
+.wday-ev { font-size: 1.3rem; display: flex; gap: 0.5rem; align-items: baseline; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.6; }
+.wday-ev::before { content: ""; width: 0.7rem; height: 0.7rem; border-radius: 50%; background: var(--c); flex: none; transform: translateY(-0.05rem); }
+.wday-ev span { overflow: hidden; text-overflow: ellipsis; }
+.wday-ev .t { color: var(--muted); flex: none; }
+.wday-more { font-size: 1.2rem; color: var(--muted); }
+
+/* ---------- night mode ---------- */
+.night { position: fixed; inset: 0; background: #000; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #4a5468; }
+.night[hidden] { display: none; }
+.night-time { font-size: 14rem; font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: -0.03em; }
+.night-date { font-size: 3rem; }
+
+.status { position: fixed; right: 1.5rem; bottom: 1rem; font-size: 1.1rem; color: var(--warn); background: rgba(0,0,0,0.6); padding: 0.4rem 0.8rem; border-radius: 0.5rem; }

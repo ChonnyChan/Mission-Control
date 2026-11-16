@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0b0f17">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Mission Control · Admin</title>
+<link rel="stylesheet" href="/admin.css">
+</head>
+<body>
+<header class="bar">
+  <h1 id="title">Mission Control</h1>
+  <span id="saved" class="saved" hidden>Saved ✓</span>
+</header>
+
+<main>
+  <section id="tab-today" class="tab">
+    <h2 id="today-label">Today’s chores</h2>
+    <div id="today-chores"></div>
+  </section>
+
+  <section id="tab-meals" class="tab" hidden>
+    <h2>Meal plan</h2>
+    <p class="hint">Changes save when you leave a box. Today and the next 13 days.</p>
+    <div id="meal-days"></div>
+  </section>
+
+  <section id="tab-chores" class="tab" hidden>
+    <h2>Chores</h2>
+    <p class="hint">Pick who it’s for and which days. No days picked = every day.</p>
+    <div id="chore-list"></div>
+    <button class="btn" id="add-chore">+ Add chore</button>
+  </section>
+
+  <section id="tab-family" class="tab" hidden>
+    <h2>Family</h2>
+    <div id="people"></div>
+    <button class="btn" id="add-person">+ Add person</button>
+
+    <h2 class="gap">Calendars</h2>
+    <details class="hint">
+      <summary>How to get a Google Calendar link</summary>
+      <ol>
+        <li>On a computer, open Google Calendar → ⚙ Settings.</li>
+        <li>Under “Settings for my calendars”, click the calendar.</li>
+        <li>Scroll to <b>Integrate calendar</b> and copy <b>Secret address in iCal format</b>.</li>
+        <li>Paste it below. (iCloud/Outlook “publish calendar” links work too.)</li>
+      </ol>
+      Keep these links private — anyone with one can read that calendar.
+    </details>
+    <div id="calendars"></div>
+    <button class="btn" id="add-calendar">+ Add calendar</button>
+  </section>
+
+  <section id="tab-settings" class="tab" hidden>
+    <h2>Settings</h2>
+    <form id="settings" class="form">
+      <label>Household name <input name="householdName" maxlength="60"></label>
+      <label>Message on the TV <input name="message" maxlength="200" placeholder="e.g. Pizza night! 🍕"></label>
+
+      <fieldset>
+        <legend>Weather location</legend>
+        <div class="row">
+          <input id="city" placeholder="Search a city or ZIP…">
+          <button type="button" class="btn small" id="city-search">Find</button>
+        </div>
+        <div id="city-results"></div>
+        <div class="hint" id="loc-current"></div>
+      </fieldset>
+
+      <label>Time zone <input name="timezone" placeholder="e.g. America/Chicago (blank = this computer’s)"></label>
+      <div class="row">
+        <label>Units
+          <select name="units"><option value="fahrenheit">°F</option><option value="celsius">°C</option></select>
+        </label>
+        <label class="check"><input type="checkbox" name="clock24h"> 24-hour clock</label>
+      </div>
+      <div class="row">
+        <label>Night mode from <input type="time" name="nightStart"></label>
+        <label>until <input type="time" name="nightEnd"></label>
+      </div>
+      <button class="btn primary" type="submit">Save settings</button>
+    </form>
+  </section>
+</main>
+
+<nav class="tabs">
+  <button data-tab="today" class="active">✓<span>Today</span></button>
+  <button data-tab="meals">🍽<span>Meals</span></button>
+  <button data-tab="chores">🧹<span>Chores</span></button>
+  <button data-tab="family">👪<span>Family</span></button>
+  <button data-tab="settings">⚙<span>Settings</span></button>
+</nav>
+
+<script src="/shared.js"></script>
+<script src="/admin.js"></script>
+</body>
+</html>
