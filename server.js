@@ -99,7 +99,12 @@ async function fetchCalendar(url) {
   const ttl = (db.settings.calendarRefreshMinutes || 10) * 60_000;
   const hit = icsCache.get(url);
   if (hit && Date.now() - hit.at < ttl) return hit.data;
-  const res = await fetch(url.replace(/^webcal:/i, 'https:'), { signal: AbortSignal.timeout(15_000) });
+  // webcal:// (what iCloud and Apple hand out) is just https:// with a different label.
+  const res = await fetch(url.trim().replace(/^webcals?:/i, 'https:'), {
+    headers: { 'User-Agent': 'MissionControl/0.1 (home dashboard)', Accept: 'text/calendar, */*' },
+    redirect: 'follow', // iCloud often redirects to a different pXX-caldav host
+    signal: AbortSignal.timeout(15_000),
+  });
   if (!res.ok) throw new Error(`HTTP ${res.status}`);
   const data = ical.sync.parseICS(await res.text());
   icsCache.set(url, { at: Date.now(), data });

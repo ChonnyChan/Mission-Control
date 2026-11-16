@@ -135,7 +135,7 @@ function renderFamily() {
         <input data-k="name" value="${esc(c.name)}" placeholder="Name (e.g. Family)">
         <button class="btn danger" data-act="del" aria-label="Remove">✕</button>
       </div>
-      <input data-k="url" value="${esc(c.url)}" placeholder="https://calendar.google.com/…/basic.ics" style="margin-top:.5rem" autocomplete="off" autocapitalize="off" spellcheck="false">
+      <input data-k="url" value="${esc(c.url)}" placeholder="webcal://…icloud.com/published/… or https://…ics" style="margin-top:.5rem" autocomplete="off" autocapitalize="off" spellcheck="false">
       <div class="row" style="margin-top:.5rem">
         <select data-k="personId">${personOptions(c.personId, 'Shared / family')}</select>
         <input type="color" data-k="color" value="${c.color}" title="Color for shared calendars">

@@ -13,7 +13,7 @@ No accounts, no cloud and no subscription. Everything lives in `data/db.json` on
 
 | Area | How it works |
 |---|---|
-| Calendars | Reads Google, iCloud or Outlook calendars from their private iCal links. Recurring events, all-day events and multi-day events all work. Each calendar can belong to a person and use their color. |
+| Calendars | Reads iCloud, Google or Outlook calendars from their share links (iCloud: turn on **Public Calendar** and paste the `webcal://` link). Recurring events, all-day events and multi-day events all work. Each calendar can belong to a person and use their color. |
 | Chores | Each chore has an owner and the days it repeats. Tick them off on a phone, and the TV updates within about 15 seconds. History is kept for a year, ready for points or rewards later. |
 | Meals | Lunch and dinner for each day. The TV shows today in large text and the rest of the week's dinners below. |
 | Weather | [Open-Meteo](https://open-meteo.com/). Free, with no API key. Set the city in Admin → Settings. |
